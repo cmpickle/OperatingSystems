@@ -19,6 +19,31 @@ void cmdExit(int argc, char **argv) {
 	exit(0);
 }
 
+void pwd(int argc, char **argv) {
+	if(argc == 1) {
+		char cwd[1024];
+		printf("%s\n", getcwd(cwd, sizeof(cwd)));
+		return;
+	}
+	//printf("Invalid number of parameters to pwd: Invalid argument\n");
+	perror();
+	return;
+}
+
+void cd(int argc, char **argv) {
+	if(argc == 1) {
+		//change working directory to $HOME
+		chdir(getenv("HOME"));
+		return;
+	} else if(argc == 2) {
+		//change working directyory to path specified in the agrument
+		chdir(argv[1]);
+		return;
+	}
+	printf("Invalid number of parameters to cd: Invalid argument\n");
+	return;
+}
+
 // getParameters returns the argc, the number of words found in cmd
 //  while populating argv with pointers to each word
 int getParameters(char *cmd, char **argv) {
@@ -45,6 +70,7 @@ int main(int argc, char **argv) {
 		printf("nanosh: ");
 		fflush(stdout);
 		rc = fgets(cmd, sizeof(cmd), stdin);
+		//This shouldn't happen
 		if (rc == NULL) {
 			exit(0);
 		}
@@ -62,6 +88,16 @@ int main(int argc, char **argv) {
 		}
 
 		// add if statements here for the other internal commands
+		if(strcmp(myArgv[0], "pwd") == 0) {
+			pwd(myArgc, myArgv);
+			continue;
+		}
+
+		if(strcmp(myArgv[0], "cd") ==0) {
+			cd(myArgc, myArgv);
+			continue;
+		}
+
 		//   and a default action that calls a function to fork()
 		//   and exec() while the parent issues waitpid()
 	}
