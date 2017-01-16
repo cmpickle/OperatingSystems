@@ -13,7 +13,8 @@
 
 void cmdExit(int argc, char **argv) {
 	if(argc > 1) {
-		printf("Exit command failed: Invalid argument\n");
+		//printf("Exit command failed: Invalid argument\n");
+		perror("");
 		return;
 	}
 	exit(0);
@@ -22,11 +23,14 @@ void cmdExit(int argc, char **argv) {
 void pwd(int argc, char **argv) {
 	if(argc == 1) {
 		char cwd[1024];
-		printf("%s\n", getcwd(cwd, sizeof(cwd)));
+		if(getcwd(cwd, sizeof(cwd)) == NULL) {
+			perror("");
+		}
+		printf("%s\n", cwd);
 		return;
 	}
-	//printf("Invalid number of parameters to pwd: Invalid argument\n");
-	perror();
+	printf("Invalid number of parameters to pwd: Invalid argument\n");
+	//perror("Invalid number of parameters to pwd: Invalid argument\n");
 	return;
 }
 
@@ -35,13 +39,17 @@ void cd(int argc, char **argv) {
 		//change working directory to $HOME
 		chdir(getenv("HOME"));
 		return;
-	} else if(argc == 2) {
+	} //else if(argc == 2) {
 		//change working directyory to path specified in the agrument
-		chdir(argv[1]);
+		if(chdir(argv[1]) == -1) {
+			perror("");
+		}
 		return;
+/*
 	}
 	printf("Invalid number of parameters to cd: Invalid argument\n");
 	return;
+*/
 }
 
 // getParameters returns the argc, the number of words found in cmd
