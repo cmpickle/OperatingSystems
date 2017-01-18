@@ -108,20 +108,21 @@ int main(int argc, char **argv) {
 		//   and a default action that calls a function to fork()
 		int proc = fork();
 		//   and exec() while the parent issues waitpid()
-		int status;
 		if(proc < 0) { //fork has failed
 			perror("Fork failed: ");
 			continue;
-		} else if(proc == 0) { //parent process ie nanosh
+		} else if(proc == 0) { //child process ie the external command to be run
+			if(execvp(cmd, myArgv)<0) {
+				perror("");
+				exit(1);
+			}
+			exit(0);
+		} else { //parent process ie nanosh
+			int status;
 			if(waitpid(proc, &status, WUNTRACED | WCONTINUED)<0) {
 				perror("");
 			}	
 			continue;
-		} else { //child process ie the external command to be run
-			if(execvp(cmd, myArgv)<0) {
-				perror("");
-			}
-			exit(0);
 		}
 	}
 
