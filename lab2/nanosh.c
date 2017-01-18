@@ -1,6 +1,6 @@
 /* 
- CS 3100 Lab 2 - by Cameron Pickle
-*/
+ *CS 3100 Lab 2 - by Cameron Pickle
+ */
 
 #include <stdio.h>
 #include <string.h>
@@ -13,8 +13,8 @@
 
 void cmdExit(int argc, char **argv) {
 	if(argc > 1) {
-		//printf("Exit command failed: Invalid argument\n");
-		perror("");
+		errno = EINVAL;
+		perror("Exit command failed: ");
 		return;
 	}
 	exit(0);
@@ -29,8 +29,8 @@ void pwd(int argc, char **argv) {
 		printf("%s\n", cwd);
 		return;
 	}
-	printf("Invalid number of parameters to pwd: Invalid argument\n");
-	//perror("Invalid number of parameters to pwd: Invalid argument\n");
+	errno = EINVAL;
+	perror("Invalid number of parameters to pwd: ");
 	return;
 }
 
@@ -39,17 +39,16 @@ void cd(int argc, char **argv) {
 		//change working directory to $HOME
 		chdir(getenv("HOME"));
 		return;
-	} //else if(argc == 2) {
+	} else if(argc == 2) {
 		//change working directyory to path specified in the agrument
 		if(chdir(argv[1]) == -1) {
 			perror("");
 		}
 		return;
-/*
 	}
-	printf("Invalid number of parameters to cd: Invalid argument\n");
+	errno = EINVAL;
+	perror("Invalid number of parameters to cd: ");
 	return;
-*/
 }
 
 // getParameters returns the argc, the number of words found in cmd
@@ -107,7 +106,23 @@ int main(int argc, char **argv) {
 		}
 
 		//   and a default action that calls a function to fork()
+		int proc = fork();
 		//   and exec() while the parent issues waitpid()
+		int status;
+		if(proc < 0) { //fork has failed
+			perror("Fork failed: ");
+			continue;
+		} else if(proc == 0) { //parent process ie nanosh
+			if(waitpid(proc, &status, WUNTRACED | WCONTINUED)<0) {
+				perror("");
+			}	
+			continue;
+		} else { //child process ie the external command to be run
+			if(execvp(cmd, myArgv)<0) {
+				perror("");
+			}
+			exit(0);
+		}
 	}
 
 	return 0;
