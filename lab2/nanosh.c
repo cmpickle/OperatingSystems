@@ -14,7 +14,7 @@
 void cmdExit(int argc, char **argv) {
 	if(argc > 1) {
 		errno = EINVAL;
-		perror("Exit command failed: ");
+		perror("Exit command failed");
 		return;
 	}
 	exit(0);
@@ -30,7 +30,7 @@ void pwd(int argc, char **argv) {
 		return;
 	}
 	errno = EINVAL;
-	perror("Invalid number of parameters to pwd: ");
+	perror("Invalid number of parameters to pwd");
 	return;
 }
 
@@ -47,7 +47,7 @@ void cd(int argc, char **argv) {
 		return;
 	}
 	errno = EINVAL;
-	perror("Invalid number of parameters to cd: ");
+	perror("Invalid number of parameters to cd");
 	return;
 }
 
@@ -109,7 +109,7 @@ int main(int argc, char **argv) {
 		int proc = fork();
 		//   and exec() while the parent issues waitpid()
 		if(proc < 0) { //fork has failed
-			perror("Fork failed: ");
+			perror("Fork failed");
 			continue;
 		} else if(proc == 0) { //child process ie the external command to be run
 			if(execvp(cmd, myArgv)<0) {
