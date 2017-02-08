@@ -1,0 +1,24 @@
+#!/bin/bash
+
+cwd=$PWD
+
+if [ $HOSTNAME == "icarus" ]
+	then
+		echo "This script CANNOT run on icarus"
+		exit
+fi
+
+echo -e "This script will attempt to install cucumber on this system.\n\n"
+if [ ! -f Gemfile  ]
+	then
+		echo -e "\nCreating a simple Gemfile to aid in installing Cucumber"
+		echo -e "source 'https://rubygems.org'\ngroup :test do\n\tgem 'cucumber'\n\tgem 'aruba'\nend\n" >Gemfile
+fi
+echo "Updating apt-get and installing bundler..."
+echo -e "\nIf prompted for a Y/n answer, hit ENTER."
+echo -e "\nYou may be prompted for your password on this system"
+sudo apt-get update
+sudo apt-get install bundler
+bundle update
+cd $cwd
+echo -e "\n\nCucumber should now be installed."
