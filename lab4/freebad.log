@@ -1,0 +1,31 @@
+==38876== Memcheck, a memory error detector
+==38876== Copyright (C) 2002-2015, and GNU GPL'd, by Julian Seward et al.
+==38876== Using Valgrind-3.11.0 and LibVEX; rerun with -h for copyright info
+==38876== Command: ./freebad
+==38876== Parent PID: 38816
+==38876== 
+==38876== Invalid free() / delete / delete[] / realloc()
+==38876==    at 0x4C2EDEB: free (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==38876==    by 0x40058D: main (freebad.c:5)
+==38876==  Address 0x5203108 is 200 bytes inside a block of size 400 alloc'd
+==38876==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==38876==    by 0x400577: main (freebad.c:4)
+==38876== 
+==38876== 
+==38876== HEAP SUMMARY:
+==38876==     in use at exit: 400 bytes in 1 blocks
+==38876==   total heap usage: 1 allocs, 1 frees, 400 bytes allocated
+==38876== 
+==38876== 400 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==38876==    at 0x4C2DB8F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==38876==    by 0x400577: main (freebad.c:4)
+==38876== 
+==38876== LEAK SUMMARY:
+==38876==    definitely lost: 400 bytes in 1 blocks
+==38876==    indirectly lost: 0 bytes in 0 blocks
+==38876==      possibly lost: 0 bytes in 0 blocks
+==38876==    still reachable: 0 bytes in 0 blocks
+==38876==         suppressed: 0 bytes in 0 blocks
+==38876== 
+==38876== For counts of detected and suppressed errors, rerun with: -v
+==38876== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
