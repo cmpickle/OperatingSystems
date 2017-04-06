@@ -14,11 +14,12 @@ void position(int value, int *valuePos, int *array, int len) {
 	}
 }
 
-int shortestDist(int src, int *dst) {
+int shortestDist(int src, int *dst, int len) {
 	int min = abs(src-*dst);
 	int minVal = *dst;
 	++dst;
-	while (*dst) {
+	int i;
+	for(i=0; i<len; ++i) {
 		if(abs(src-*dst)<min) {
 			min = abs(src-*dst);
 			minVal = *dst;
@@ -28,11 +29,12 @@ int shortestDist(int src, int *dst) {
 	return minVal;
 }
 
-int nextScan(int src, int *dst) {
+int nextScan(int src, int *dst, int len) {
 	int next = (src <= *dst)? abs(*dst-src):abs(*dst+256-src);
 	int nextVal = *dst;
 	++dst;
-	while(*dst) {
+	int i;
+	for(i=0; i<len; ++i) {
 		if(src <= *dst) {
 			if(abs(*dst-src)<next) {
 				next = abs(*dst-src);
@@ -50,11 +52,12 @@ int nextScan(int src, int *dst) {
 	return nextVal;
 }
 
-int nextCScan(int src, int *dst) {
+int nextCScan(int src, int *dst, int len) {
 	int next = (src <= *dst)? abs(*dst-src):abs(512-*dst-src);
 	int nextVal = *dst;
 	++dst;
-	while(*dst) {
+	int i;
+	for(i=0; i<len; ++i) {
 		if(src <= *dst) {
 			if(abs(*dst-src)<next) {
 				next = abs(*dst-src);
@@ -143,7 +146,7 @@ int main(int argc, char **argv) {
 	int *current = tracks;
 	++current;
 	for(i=0; i<8; ++i) {
-		int next = shortestDist(*(current-1), current);
+		int next = shortestDist(*(current-1), current, 8-i);
 		position(next, current, current, 8-i);
 		++current;
 	}
@@ -182,7 +185,7 @@ int main(int argc, char **argv) {
 	current = tracks;
 	++current;
 	for(i=0; i<8; ++i) {
-		int next = nextScan(*(current-1), current);
+		int next = nextScan(*(current-1), current, 8-i);
 		position(next, current, current, 8-i);
 		++current;
 	}
@@ -221,7 +224,7 @@ int main(int argc, char **argv) {
 	current = tracks;
 	++current;
 	for(i=0; i<8; ++i) {
-		int next = nextCScan(*(current-1), current);
+		int next = nextCScan(*(current-1), current, 8-i);
 		position(next, current, current, 8-i);
 		++current;
 	}
