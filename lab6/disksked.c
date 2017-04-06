@@ -17,6 +17,7 @@ void position(int value, int *valuePos, int *array, int len) {
 int shortestDist(int src, int *dst, int len) {
 	int min = abs(src-*dst);
 	int minVal = *dst;
+	--len;
 	++dst;
 	int i;
 	for(i=0; i<len; ++i) {
@@ -29,13 +30,14 @@ int shortestDist(int src, int *dst, int len) {
 	return minVal;
 }
 
-int nextScan(int src, int *dst, int len) {
-	int next = (src <= *dst)? abs(*dst-src):abs(*dst+256-src);
+int nextScan(int init, int src, int *dst, int len) {
+	int next = (init <= *dst)? abs(*dst-src):abs(*dst+256-src);
 	int nextVal = *dst;
+	--len;
 	++dst;
 	int i;
 	for(i=0; i<len; ++i) {
-		if(src <= *dst) {
+		if(init <= *dst) {
 			if(abs(*dst-src)<next) {
 				next = abs(*dst-src);
 				nextVal = *dst;
@@ -55,6 +57,7 @@ int nextScan(int src, int *dst, int len) {
 int nextCScan(int src, int *dst, int len) {
 	int next = (src <= *dst)? abs(*dst-src):abs(512-*dst-src);
 	int nextVal = *dst;
+	--len;
 	++dst;
 	int i;
 	for(i=0; i<len; ++i) {
@@ -104,7 +107,8 @@ int main(int argc, char **argv) {
 	++argv;
 
 	//Read in command line args to int *tracks
-	while(*argv) {
+	int i;
+	for(i=0; i<9; ++i) {
 		*tracks = atoi(*argv);
 		++argv;
 		++tracks;
@@ -112,20 +116,17 @@ int main(int argc, char **argv) {
 	tracks = tracks_head;
 	
 	//FCFS
-	int count = 0;
-	while(*tracks) {
-		if(count<8)
-			*dist = abs(*tracks - *(tracks+1));
+	for(i=0; i<8; ++i) {
+		*dist = abs(*tracks - *(tracks+1));
 		++tracks;
 		++dist;
-		++count;
 	}
 	tracks = tracks_head;
 	dist = dist_head;
 
 	printf("FCFS: Start:%d ", *tracks);
 	++tracks;
-	while(*tracks) {
+	for(i=0; i<8; ++i) {
 		printf("%d:%d ", *tracks, *dist);
 		++tracks;
 		++dist;
@@ -133,7 +134,6 @@ int main(int argc, char **argv) {
 	tracks = tracks_head;
 	dist = dist_head;
 
-	int i;
 	for(i=0; i<8; ++i) {
 		total += *dist;
 		++dist;
@@ -152,20 +152,17 @@ int main(int argc, char **argv) {
 	}
 	tracks = tracks_head;
 	dist = dist_head;
-	count = 0;
-	while(*tracks) {
-		if(count<8)
-			*dist = abs(*tracks - *(tracks+1));
+	for(i=0; i<8; ++i) {
+		*dist = abs(*tracks - *(tracks+1));
 		++tracks;
 		++dist;
-		++count;
 	}
 	tracks = tracks_head;
 	dist = dist_head;
 
 	printf("SSTF: Start:%d ", *tracks);
 	++tracks;
-	while(*tracks) {
+	for(i=0; i<8; ++i) {
 		printf("%d:%d ", *tracks, *dist);
 		++tracks;
 		++dist;
@@ -184,27 +181,25 @@ int main(int argc, char **argv) {
 	//SCAN
 	current = tracks;
 	++current;
+	int init = *tracks;
 	for(i=0; i<8; ++i) {
-		int next = nextScan(*(current-1), current, 8-i);
+		int next = nextScan(init, *(current-1), current, 8-i);
 		position(next, current, current, 8-i);
 		++current;
 	}
 	tracks = tracks_head;
 	dist = dist_head;
-	count = 0;
-	while(*tracks) {
-		if(count<8)
-			*dist = abs(*tracks - *(tracks+1));
+	for(i=0; i<8; ++i) {
+		*dist = abs(*tracks - *(tracks+1));
 		++tracks;
 		++dist;
-		++count;
 	}
 	tracks = tracks_head;
 	dist = dist_head;
 
 	printf("SCAN: Start:%d ", *tracks);
 	++tracks;
-	while(*tracks) {
+	for(i=0; i<8; ++i) {
 		printf("%d:%d ", *tracks, *dist);
 		++tracks;
 		++dist;
